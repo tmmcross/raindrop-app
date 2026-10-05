@@ -48,7 +48,7 @@ export default function AddRoute() {
         <Screen>
             <Header item={item} />
             <Content item={item} />
-            <Events />
+            <Events item={item} />
         </Screen>
     )
 }

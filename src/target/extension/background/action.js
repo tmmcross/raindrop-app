@@ -18,19 +18,22 @@ export async function updateBadge() {
     ])
 }
 
-export async function open(path) {
-    if (!path)
-        return browser.action.openPopup()
+export async function open(path, { width = 420, height = 600 } = {}) {
+    let origin = { left: 0, top: 0, width: 0, height: 0 }
+    try{
+        origin = await browser.windows.getCurrent()
+    } catch(_) {}
 
-    const { default_popup } = browser.runtime.getManifest().action
+    return await browser.windows.create({
+        url: `/index.html#${path}`,
+        type: 'popup',
 
-    await browser.action.setPopup({ popup: `${default_popup}#${path}` })
-    try {
-        await browser.action.openPopup()
-    } finally {
-        //always restore, even if opening failed
-        await browser.action.setPopup({ popup: default_popup })
-    }
+        //position
+        width,
+        height,
+        left: parseInt(origin.left + (origin.width/2) - (width/2)),
+        top: parseInt(origin.top + (origin.height/2) - (height/2))
+    })
 }
 
 async function onTabsUpdated(id, details = {}) {
