@@ -1,24 +1,33 @@
-# Raindrop.io 5.0
+# Raindrop.io (AutoClose)
 
-A personal fork of [Raindrop.io](https://github.com/raindropio/app) with a small customization for the browser extension.
+A personal fork of [Raindrop.io](https://github.com/raindropio/app) with a small customization for the Chrome extension.
+
+## Official version
+
+The AutoClose build is based on the official Raindrop.io version **5.8.2**.
+
+Official project: [raindropio/app](https://github.com/raindropio/app)
 
 ## Modification
 
 ### Automatically close the popup after saving
 
-The browser extension now automatically closes the popup window after a bookmark has been successfully saved.
+The Chrome extension automatically closes the popup window after a bookmark has been successfully saved.
 
 The modification detects the draft status transition from `saving` to `loaded` and closes the popup when the save operation is complete.
 
-## Upstream
+## Versioning
 
-This repository is a fork of [raindropio/app](https://github.com/raindropio/app).
+This modified build uses the fourth version component to identify AutoClose revisions:
 
-The fork is maintained for personal use while keeping the ability to incorporate upstream updates.
+- Official `5.8.2` → AutoClose `5.8.2.1`
+- Further AutoClose updates based on the same official version increment the fourth component.
+
+If the official project ever adopts a four-component version that conflicts with this scheme, the versioning scheme will be revised.
 
 ## Build
 
-Be sure to run `npm i` before calling any commands below
+Be sure to run `npm i` before calling any commands below.
 
 | target   | command | notes |
 |----------|---------|-------|
@@ -26,7 +35,7 @@ Be sure to run `npm i` before calling any commands below
 | electron | `npm run build:electron` |
 | chrome   | `npm run build:extension:chrome` |
 | edge     | `npm run build:extension:edge` |
-| firefox   | `npm run build:extension:firefox` | Saved to `dist/firefox/prod` |
+| firefox  | `npm run build:extension:firefox` | Saved to `dist/firefox/prod` |
 | opera    | `npm run build:extension:opera` |
 | safari   | `npm run build:extension:safari` | Then open **build/xcode** project
 
@@ -58,3 +67,5 @@ defaults delete com.apple.Safari 2>/dev/null
 ## Notes
 
 This is a personal modification and may require updates if the upstream implementation changes.
+
+The automated GitHub Release publishes the Chrome extension ZIP only.
