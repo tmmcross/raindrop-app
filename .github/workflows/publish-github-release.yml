@@ -42,4 +42,5 @@ jobs:
         gh release create "${TAG}" \
           "dist/raindrop-app-autoclose-${{ steps.version.outputs.version }}.zip" \
           --title "Raindrop.io (AutoClose) ${{ steps.version.outputs.version }}" \
+          --target "$GITHUB_SHA" \
           --generate-notes
