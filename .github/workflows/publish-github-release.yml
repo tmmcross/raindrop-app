@@ -27,14 +27,12 @@ jobs:
     - name: Build Chrome extension
       run: npm run build:extension:chrome
 
-    - name: Prepare release asset
-      env:
-        VERSION: ${{ steps.version.outputs.version }}
-      run: cp dist/chrome-prod.zip "dist/raindrop-app-autoclose-${VERSION}.zip"
-
     - name: Read version
       id: version
       run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+    - name: Prepare release asset
+      run: cp dist/chrome-prod.zip "dist/raindrop-app-autoclose-${{ steps.version.outputs.version }}.zip"
 
     - name: Create GitHub Release
       env:
