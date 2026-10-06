@@ -5,6 +5,9 @@ on:
     branches:
     - release/production
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,25 +24,24 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    - name: Make version.sh for xcode project executable
-      run: chmod +x build/xcode/Save\ to\ Raindrop.io/version.sh
+    - name: Build Chrome extension
+      run: npm run build:extension:chrome
 
-    - name: Build for all platforms
+    - name: Prepare release asset
       env:
-        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-      run: npm run build && npm run build:extension && npm run build:electron
+        VERSION: ${{ steps.version.outputs.version }}
+      run: cp dist/chrome-prod.zip "dist/raindrop-app-autoclose-${VERSION}.zip"
 
-    - name: Read package json
-      id: json
-      uses: zoexx/github-action-json-file-properties@release
-      with:
-        file_path: "package.json"
+    - name: Read version
+      id: version
+      run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
 
-    - uses: "marvinpinto/action-automatic-releases@latest"
-      with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "latest"
-        prerelease: false
-        title: ${{steps.json.outputs.version}}
-        files: |
-          dist/*.zip
+    - name: Create GitHub Release
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        TAG="autoclose-v${{ steps.version.outputs.version }}"
+        gh release create "${TAG}" \
+          "dist/raindrop-app-autoclose-${{ steps.version.outputs.version }}.zip" \
+          --title "Raindrop.io (AutoClose) ${{ steps.version.outputs.version }}" \
+          --generate-notes
