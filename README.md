@@ -1,71 +1,24 @@
-# Raindrop.io (AutoClose)
+# Raindrop.io AutoClose
 
-A personal fork of [Raindrop.io](https://github.com/raindropio/app) with a small customization for the Chrome extension.
-
-## Official version
-
-The AutoClose build is based on the official Raindrop.io version **5.8.2**.
-
-Official project: [raindropio/app](https://github.com/raindropio/app)
+A personal fork of [Raindrop.io](https://github.com/raindropio/app) that automatically closes the browser extension popup after a bookmark is successfully saved.
 
 ## Modification
 
-### Automatically close the popup after saving
-
-The Chrome extension automatically closes the popup window after a bookmark has been successfully saved.
-
-The modification detects the draft status transition from `saving` to `loaded` and closes the popup when the save operation is complete.
+The add-bookmark popup closes when the draft status changes from `saving` to `loaded`.
+The upstream Escape-key behavior is retained.
 
 ## Versioning
 
-This modified build uses the fourth version component to identify AutoClose revisions:
+The first three version components follow upstream. The fourth component identifies AutoClose revisions.
 
-- Official `5.8.2` → AutoClose `5.8.2.1`
-- Further AutoClose updates based on the same official version increment the fourth component.
-
-If the official project ever adopts a four-component version that conflicts with this scheme, the versioning scheme will be revised.
+Example: upstream `5.8.5` → this fork `5.8.5.5`.
 
 ## Build
 
-Be sure to run `npm i` before calling any commands below.
-
-| target   | command | notes |
-|----------|---------|-------|
-| web      | `npm run build` |
-| electron | `npm run build:electron` |
-| chrome   | `npm run build:extension:chrome` |
-| edge     | `npm run build:extension:edge` |
-| firefox  | `npm run build:extension:firefox` | Saved to `dist/firefox/prod` |
-| opera    | `npm run build:extension:opera` |
-| safari   | `npm run build:extension:safari` | Then open **build/xcode** project
-
-## Development
-
-| target   | command | notes |
-|----------|---------|-------|
-| web      | `npm run local` |
-| chrome   | `npm run local:extension:chrome` | Turn off `same-site-by-default-cookies` in Chrome browser flags
-
-### Reset Safari extension state (dev purpose only)
-
-Danger removes all safari settings!!!
+Install dependencies with `npm ci`, then build the Chromium extension:
 
 ```sh
-rm -rf ~/Library/Containers/com.apple.Safari/Data/Library/Safari/*
-rm -rf ~/Library/Containers/com.apple.Safari/Data/Library/WebKit/*
-rm -rf ~/Library/Developer/Xcode/DerivedData/Save_to_Raindrop.io-*(N)
-defaults delete com.apple.Safari 2>/dev/null
+npm run build:extension:chrome
 ```
 
-## Supported browsers
-
-- Chrome >= 67 - older versions not support SameSite cookie
-- Safari >= 11 (OS X 10.11) - older version not support JS Rest in objects
-- Firefox >= 55 - older version not support JS Rest in objects
-- Edge >= 80 - earlies Blink version
-
-## Notes
-
-This is a personal modification and may require updates if the upstream implementation changes.
-
-The automated GitHub Release publishes the Chrome extension ZIP only.
+The GitHub Actions workflow builds the extension and publishes a ZIP release.
