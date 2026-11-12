@@ -23,7 +23,7 @@ module.exports = ({ vendor, production=false }, l) => {
 			version_name:	version,
 		} : {}),
 
-		name:			'Raindrop Vivaldi'+(!production?' (Dev)':''),
+		name:			'Raindrop.io'+(!production?' (Dev)':''),
 		description:	'__MSG_appDesc__',
 		homepage_url:	'https://app.raindrop.io',
 		author:			'Mussabekov Rustem',
@@ -103,7 +103,7 @@ module.exports = ({ vendor, production=false }, l) => {
 			...(!production ? ['http://localhost:3000/*'] : []),
 
 			//fix firefox cookie protection
-			...(vendor == 'firefox' || vendor == 'chrome' || vendor == 'edge' || vendor == 'opera' ? ['https://api.raindrop.io/*'] : []),
+			...(vendor == 'firefox' ? ['*://api.raindrop.io/*'] : []),
 		],
 
 		optional_host_permissions: [
