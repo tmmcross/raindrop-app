@@ -18,22 +18,42 @@ export async function updateBadge() {
     ])
 }
 
-export async function open(path, { width = 420, height = 600 } = {}) {
-    let origin = { left: 0, top: 0, width: 0, height: 0 }
-    try{
-        origin = await browser.windows.getCurrent()
-    } catch(_) {}
+async function openPopup(path) {
+    if (!path)
+        return browser.action.openPopup()
 
-    return await browser.windows.create({
+    const { default_popup } = browser.runtime.getManifest().action
+
+    await browser.action.setPopup({ popup: `${default_popup}#${path}` })
+    try {
+        await browser.action.openPopup()
+    } finally {
+        //always restore, even if opening failed
+        await browser.action.setPopup({ popup: default_popup })
+    }
+}
+
+async function openWindow({ path = '', width = 420, height = 600 }) {
+    const origin = await browser.windows.getCurrent()
+
+    return browser.windows.create({
         url: `/index.html#${path}`,
         type: 'popup',
-
-        //position
         width,
         height,
-        left: parseInt(origin.left + (origin.width/2) - (width/2)),
-        top: parseInt(origin.top + (origin.height/2) - (height/2))
+        left: Math.round(origin.left + (origin.width - width) / 2),
+        top: Math.round(origin.top + (origin.height - height) / 2)
     })
+}
+
+//openPopup can fail in some browsers (e.g. Vivaldi), then a separate window is used with windowOptions
+export async function open(path, windowOptions) {
+    try {
+        await openPopup(path)
+    } catch (e) {
+        console.log(e)
+        await openWindow({ path, ...windowOptions })
+    }
 }
 
 async function onTabsUpdated(id, details = {}) {
