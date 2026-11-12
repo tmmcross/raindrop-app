@@ -5,6 +5,10 @@
 .tags {
     a {
         color: var(--accent-color)
+
+        @media (prefers-color-scheme: light) {
+            color: oklch(from var(--accent-color, inherit) .55 min(c, .2) h)
+        }
         margin-right: var(--padding-small)
     }
     
