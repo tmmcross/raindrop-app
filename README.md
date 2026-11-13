@@ -16,6 +16,34 @@ The Chrome extension automatically closes the popup window after a bookmark has 
 
 The modification detects the draft status transition from `saving` to `loaded` and closes the popup when the save operation is complete.
 
+## Permissions
+
+### Raindrop.io API access
+
+The extension communicates with the Raindrop.io API (`https://api.raindrop.io`) using the browser's existing login session.
+
+The API's CORS policy allows the official Raindrop.io extension ID, but may reject requests from unofficial builds that use a different extension ID. In that case, API requests can fail even when the user is logged in.
+
+The manifest declares this optional host permission:
+
+```json
+"optional_host_permissions": [
+  "*://*/*"
+]
+```
+
+Granting this permission allows the extension to access the Raindrop.io API from an unofficial build.
+
+**Current workaround:** There is currently no dedicated UI for requesting this permission. It can be granted through the **Add Highlight** action:
+
+1. Open the Raindrop.io extension menu.
+2. Select **Add Highlight**.
+3. Grant the requested site access permission when prompted.
+
+This grants access to websites in general, not only to the Raindrop.io API.
+
+> **Note:** This is a workaround rather than an ideal permission flow. A dedicated permission request UI or an upstream change would be preferable.
+
 ## Versioning
 
 This modified build uses the fourth version component to identify AutoClose revisions:
